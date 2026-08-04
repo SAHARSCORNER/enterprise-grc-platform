@@ -1,0 +1,11 @@
+{
+  "installCommand": "npm --prefix shared install && npm --prefix client install",
+  "buildCommand": "npm --prefix shared run build && npm --prefix client run build",
+  "outputDirectory": "client/dist",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}

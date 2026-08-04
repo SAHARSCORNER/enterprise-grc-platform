@@ -1,0 +1,271 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         String   @default("READ_ONLY") // UserRole enum string
+  department   String?
+  avatarUrl    String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Employee {
+  id               String   @id @default(uuid())
+  employeeCode     String   @unique
+  firstName        String
+  lastName         String
+  email            String   @unique
+  phone            String?
+  department       String
+  designation      String
+  managerId        String?
+  managerName      String?
+  employmentStatus String   @default("FULL_TIME")
+  joiningDate      String
+  terminationDate  String?
+  officeLocation   String
+  skills           String   @default("[]") // JSON string array
+  riskScore        Int      @default(0)
+  notes            String?
+  isArchived       Boolean  @default(false)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  assets           Asset[]
+  assignments      AssetAssignmentLog[]
+
+  @@index([department])
+  @@index([managerId])
+}
+
+model Asset {
+  id                 String   @id @default(uuid())
+  assetTag           String   @unique
+  name               String
+  category           String   // AssetCategory enum string
+  serialNumber       String   @unique
+  purchaseDate       String
+  warrantyExpiry     String
+  status             String   @default("AVAILABLE") // AssetStatus enum string
+  riskScore          Int      @default(0)
+  complianceStatus   String   @default("COMPLIANT") // ComplianceStatus enum string
+  assignedEmployeeId String?
+  department         String?
+  specifications     String?  // JSON string
+  cost               Float    @default(0.0)
+  location           String?
+  isGlobal           Boolean  @default(false)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  assignedEmployee   Employee? @relation(fields: [assignedEmployeeId], references: [id], onDelete: SetNull)
+  assignmentLogs     AssetAssignmentLog[]
+
+  @@index([category])
+  @@index([status])
+  @@index([assignedEmployeeId])
+}
+
+model Ticket {
+  id          String   @id @default(uuid())
+  ticketCode  String   @unique
+  title       String
+  description String
+  category    String   // IT_ACCESS, SECURITY_INCIDENT, ASSET_REQUEST, COMPLIANCE_QUERY
+  priority    String   @default("MEDIUM") // LOW, MEDIUM, HIGH, CRITICAL
+  status      String   @default("OPEN")   // OPEN, IN_PROGRESS, RESOLVED, CLOSED
+  reporter    String
+  assignedTo  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([status])
+  @@index([category])
+}
+
+model AssetAssignmentLog {
+  id           String    @id @default(uuid())
+  assetId      String
+  employeeId   String
+  employeeName String
+  assignedAt   DateTime  @default(now())
+  unassignedAt DateTime?
+  assignedBy   String
+  notes        String?
+
+  asset        Asset     @relation(fields: [assetId], references: [id], onDelete: Cascade)
+  employee     Employee  @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+}
+
+model Risk {
+  id                 String   @id @default(uuid())
+  riskId             String   @unique
+  title              String
+  description        String
+  likelihood         Int
+  impact             Int
+  score              Int
+  category           String
+  owner              String
+  ownerEmail         String?
+  status             String   @default("OPEN")
+  mitigationPlan     String?
+  relatedAssetIds    String   @default("[]") // JSON array string
+  relatedEmployeeIds String   @default("[]") // JSON array string
+  relatedDepartments String   @default("[]") // JSON array string
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@index([status])
+  @@index([category])
+}
+
+model Control {
+  id            String   @id @default(uuid())
+  controlCode   String   @unique
+  title         String
+  description   String
+  framework     String   // FrameworkName enum string
+  category      String
+  status        String   @default("NOT_IMPLEMENTED")
+  owner         String
+  progress      Int      @default(0)
+  evidenceCount Int      @default(0)
+  policyIds     String   @default("[]") // JSON array string
+  updatedAt     DateTime @updatedAt
+
+  @@index([framework])
+  @@index([status])
+}
+
+model Audit {
+  id             String   @id @default(uuid())
+  auditCode      String   @unique
+  title          String
+  scope          String
+  framework      String
+  leadAuditor    String
+  startDate      String
+  endDate        String
+  status         String   @default("PLANNED")
+  evidenceFiles  String   @default("[]") // JSON array string
+  approvalStatus String   @default("PENDING")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  findings       AuditFinding[]
+}
+
+model AuditFinding {
+  id               String   @id @default(uuid())
+  auditId          String
+  title            String
+  description      String
+  severity         String   // FindingSeverity enum string
+  correctiveAction String
+  dueDate          String
+  status           String   @default("OPEN")
+
+  audit            Audit    @relation(fields: [auditId], references: [id], onDelete: Cascade)
+}
+
+model Vendor {
+  id                             String   @id @default(uuid())
+  name                           String
+  category                       String
+  contactName                    String
+  contactEmail                   String
+  riskScore                      Int      @default(0)
+  riskLevel                      String   @default("LOW")
+  securityQuestionnaireCompleted Boolean  @default(false)
+  contractExpiryDate             String
+  certificates                   String   @default("[]") // JSON array string
+  complianceDocuments            String   @default("[]") // JSON array string
+  createdAt                      DateTime @default(now())
+  updatedAt                      DateTime @updatedAt
+}
+
+model Incident {
+  id                 String   @id @default(uuid())
+  incidentCode       String   @unique
+  title              String
+  description        String
+  severity           String   @default("MEDIUM")
+  status             String   @default("OPEN")
+  owner              String
+  reportedAt         DateTime @default(now())
+  resolvedAt         DateTime?
+  affectedAssetIds   String   @default("[]") // JSON array string
+  affectedEmployeeIds String  @default("[]") // JSON array string
+  rootCause          String?
+  lessonsLearned     String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
+model Policy {
+  id                            String   @id @default(uuid())
+  policyCode                    String   @unique
+  title                         String
+  category                      String
+  version                       String   @default("1.0")
+  owner                         String
+  status                        String   @default("DRAFT")
+  effectiveDate                 String
+  reviewCycleMonths             Int      @default(12)
+  nextReviewDate                String
+  acknowledgementCount          Int      @default(0)
+  totalRequiredAcknowledgements Int      @default(0)
+  fileUrl                       String?
+  content                       String?
+  createdAt                     DateTime @default(now())
+  updatedAt                     DateTime @updatedAt
+
+  acknowledgements              PolicyAcknowledgement[]
+}
+
+model PolicyAcknowledgement {
+  id             String   @id @default(uuid())
+  policyId       String
+  employeeId     String
+  employeeName   String
+  acknowledgedAt DateTime @default(now())
+
+  policy         Policy   @relation(fields: [policyId], references: [id], onDelete: Cascade)
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  title     String
+  message   String
+  type      String   @default("INFO")
+  module    String   @default("dashboard")
+  read      Boolean  @default(false)
+  timestamp DateTime @default(now())
+  linkUrl   String?
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  timestamp DateTime @default(now())
+  userId    String
+  userName  String
+  userRole  String
+  action    String
+  module    String
+  entityId  String?
+  oldValue  String?  // JSON string
+  newValue  String?  // JSON string
+  ipAddress String   @default("127.0.0.1")
+  userAgent String?
+}
