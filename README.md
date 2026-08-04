@@ -15,7 +15,7 @@ A production-quality, enterprise-grade Governance, Risk, and Compliance (GRC) pl
 
 ## 🚀 Live Demo & Documentation
 
-- **Vercel Live App**: [https://enterprise-grc-platform.vercel.app](https://enterprise-grc-platform.vercel.app) *(Set your live Vercel URL here)*
+- **Vercel Live App**: [https://enterprise-grc-platform.vercel.app](https://enterprise-grc-platform1.vercel.app) 
 - **GitHub Repository**: [https://github.com/YOUR_GITHUB_USERNAME/enterprise-grc-platform](https://github.com/YOUR_GITHUB_USERNAME/enterprise-grc-platform)
 - **Deployment & Security Manual**: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)
 - **Architecture Overview**: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
