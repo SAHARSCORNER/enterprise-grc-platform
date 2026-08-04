@@ -9,40 +9,34 @@
 ![Socket.IO](https://img.shields.io/badge/WebSockets-Socket.IO-010101?logo=socketdotio)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
-A production-quality, enterprise-grade Governance, Risk, and Compliance (GRC) platform built with **React 19**, **TypeScript**, **Node.js Clean Architecture**, **Socket.IO WebSockets**, **React Flow** interactive topology graphs, and **AI Assistant** integration.
+A production-quality, enterprise-grade Governance, Risk, and Compliance (GRC) platform built with **React 19**, **TypeScript**, **Node.js Clean Architecture**, **Prisma ORM**, **Socket.IO WebSockets**, **React Flow** interactive topology graphs, and an integrated **AI Assistant**.
 
 ---
 
-## 🚀 Live Demo & Documentation
+## 🚀 Live Demo & Repository Links
 
-- **Vercel Live App**: [https://enterprise-grc-platform.vercel.app](https://enterprise-grc-platform1.vercel.app) 
-- **GitHub Repository**: [https://github.com/YOUR_GITHUB_USERNAME/enterprise-grc-platform](https://github.com/YOUR_GITHUB_USERNAME/enterprise-grc-platform)
-- **Deployment & Security Manual**: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)
+- **GitHub Repository**: [https://github.com/SAHARSCORNER/enterprise-grc-platform](https://github.com/SAHARSCORNER/enterprise-grc-platform)
+- **Deployment Manual**: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)
 - **Architecture Overview**: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
-- **API Specification**: [docs/API_DOCUMENTATION.md](docs/API_DOCUMENTATION.md)
+- **API Documentation**: [docs/API_DOCUMENTATION.md](docs/API_DOCUMENTATION.md)
 
 ---
 
-## 🛡️ Key Features & Capabilities
+## 🛡️ Key Platform Modules
 
-- 📊 **Executive Dashboard**: Real-time GRC KPIs, 6-month compliance trends (ISO 27001, SOC 2), risk severity breakdown, and live audit feed.
-- ⚡ **Interactive Standalone Showcase Mode**: Seamless fallback rendering so the live Vercel demo renders full charts and metrics out-of-the-box without requiring an external database connection.
-- 🕸️ **Network Topology Graph (React Flow)**: Interactive graph visualizing Department Groups, Manager hierarchies, and Employee-Asset relationships.
-- 🏷️ **Asset Inventory & QR Generator**: Barcode/QR code creation, life-cycle tracking, and risk-score assignment.
-- 🛡️ **Risk Management Matrix**: Interactive 5×5 Likelihood vs Impact Heatmap Matrix and Risk Register.
-- 📋 **Compliance Tracker**: Continuous framework control tracking across ISO 27001, SOC 2, NIST CSF, and CIS Controls.
-- 🔍 **Audit & Vendor Management**: Internal audit lifecycle, questionnaire tracking, vendor security certificates, and contract expiries.
-- 🤖 **AI Assistant**: Conversational GRC intelligence engine analyzing organizational risk postures.
-- ⚡ **Real-Time WebSockets**: Socket.IO event pipeline synchronizing employee profiles, assets, and audit logs across all open clients instantly.
-
----
-
-## 🔒 Credential Security Guarantee
-
-This repository enforces strict security guidelines to prevent secret leakage:
-- `.gitignore` ignores all `.env`, `.env.local`, SQLite databases (`dev.db`, `prisma/*.db*`), `node_modules`, and build artifacts.
-- Safe templates are provided: [server/.env.example](server/.env.example) & [client/.env.example](client/.env.example).
-- All secret keys and JWT passphrases must be supplied via Vercel or your hosting environment settings.
+1. **Executive Dashboard**: Real-time GRC KPIs, 6-month compliance trends (ISO 27001, SOC 2), risk severity breakdown, and live audit feed. Includes an **Interactive Showcase Mode** for standalone client rendering.
+2. **Employee Directory**: Full workforce management, department filters, status tracking, and manager-employee relationships.
+3. **Asset Inventory**: Barcode & QR Code generation, hardware/software lifecycle tracking, and automated asset risk scoring.
+4. **Interactive Network Graph (React Flow)**: Visual topology diagram representing Department Groups, Manager hierarchies, and Employee-Asset connections.
+5. **Risk Management**: Risk Register with impact/likelihood scoring and an interactive 5×5 Heatmap Matrix.
+6. **Compliance Tracker**: Continuous security control monitoring for ISO 27001, SOC 2, NIST CSF, and CIS Controls.
+7. **Audit Module**: Audit planning, internal finding management, corrective action tracking, and completion workflows.
+8. **Vendor Management**: Third-party risk assessments, security questionnaires, vendor certificates, and contract expiries.
+9. **Incident Management**: Security incident response workflows, root cause analysis, and resolution timelines.
+10. **Policy Management**: Policy version control, review cycle countdowns, and employee acknowledgment tracking.
+11. **AI Assistant**: Natural language GRC analytics engine evaluating live database state with a pluggable LLM interface.
+12. **Reports Generator**: Instant automated PDF & CSV exports for audit readiness.
+13. **System Audit Logs**: Immutable real-time trail of all user actions, IP addresses, and system events.
 
 ---
 
@@ -72,16 +66,26 @@ This repository enforces strict security guidelines to prevent secret leakage:
 
 ---
 
+## 🔒 Credential Security Guarantee
+
+This project strictly enforces credential protection and secret management:
+- `.gitignore` ignores all `.env`, `.env.local`, SQLite databases (`dev.db`, `prisma/*.db*`), `node_modules`, and build outputs.
+- Safe templates are provided: [server/.env.example](server/.env.example) & [client/.env.example](client/.env.example).
+- All secret keys and JWT passphrases must be supplied via environment variables.
+
+---
+
 ## 💻 Quick Start (Local Execution)
 
 ### Prerequisites
 - **Node.js**: v18+ installed
 - **npm**: v9+ installed
 
-### 1. Build Shared Types
+### 1. Clone & Build Shared Types
 ```bash
-cd shared
-npm run build
+git clone https://github.com/SAHARSCORNER/enterprise-grc-platform.git
+cd enterprise-grc-platform
+npm --prefix shared run build
 ```
 
 ### 2. Start Backend Server
@@ -105,7 +109,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## 🐳 Docker Deployment
 
-To launch the full-stack application using Docker Compose:
+To launch the entire platform stack using Docker Compose:
 
 ```bash
 docker compose -f docker/docker-compose.yml up --build
@@ -113,14 +117,17 @@ docker compose -f docker/docker-compose.yml up --build
 
 ---
 
-## 🌐 Deploy to Vercel in 3 Steps
+## 🌐 Vercel Deployment Settings
 
-1. Push your repository to GitHub (refer to [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)).
-2. Import your GitHub repository on [Vercel](https://vercel.com).
-3. Set root directory to `client`, build command to `npm run build`, output directory to `dist`, and click **Deploy**.
+When deploying the frontend to **Vercel**:
+- **GitHub Repository**: `SAHARSCORNER/enterprise-grc-platform`
+- **Root Directory**: `./` (or `client`)
+- **Framework Preset**: `Vite`
+- **Build Command**: `npm --prefix shared run build && npm --prefix client run build`
+- **Output Directory**: `client/dist`
 
 ---
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License.
