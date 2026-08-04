@@ -7,39 +7,76 @@
 ![Node.js](https://img.shields.io/badge/Backend-Node.js-339933?logo=nodedotjs)
 ![Prisma](https://img.shields.io/badge/ORM-Prisma-2D3748?logo=prisma)
 ![Socket.IO](https://img.shields.io/badge/WebSockets-Socket.IO-010101?logo=socketdotio)
+![License](https://img.shields.io/badge/License-MIT-green)
 
-A production-quality, enterprise-grade GRC web platform built with React 19, Clean Architecture, Socket.IO WebSockets, React Flow interactive topology graphs, and AI Assistant integration.
+A production-quality, enterprise-grade Governance, Risk, and Compliance (GRC) platform built with **React 19**, **TypeScript**, **Node.js Clean Architecture**, **Socket.IO WebSockets**, **React Flow** interactive topology graphs, and **AI Assistant** integration.
 
 ---
 
-## 🚀 Live Demo & Deployment
+## 🚀 Live Demo & Documentation
 
-- **Vercel Frontend**: [https://enterprise-grc-platform.vercel.app](https://enterprise-grc-platform.vercel.app) *(Replace with your live Vercel URL)*
+- **Vercel Live App**: [https://enterprise-grc-platform.vercel.app](https://enterprise-grc-platform.vercel.app) *(Set your live Vercel URL here)*
 - **GitHub Repository**: [https://github.com/YOUR_GITHUB_USERNAME/enterprise-grc-platform](https://github.com/YOUR_GITHUB_USERNAME/enterprise-grc-platform)
-- **Deployment & Security Guide**: See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) for step-by-step instructions.
+- **Deployment & Security Manual**: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)
+- **Architecture Overview**: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
+- **API Specification**: [docs/API_DOCUMENTATION.md](docs/API_DOCUMENTATION.md)
+
+---
+
+## 🛡️ Key Features & Capabilities
+
+- 📊 **Executive Dashboard**: Real-time GRC KPIs, 6-month compliance trends (ISO 27001, SOC 2), risk severity breakdown, and live audit feed.
+- ⚡ **Interactive Standalone Showcase Mode**: Seamless fallback rendering so the live Vercel demo renders full charts and metrics out-of-the-box without requiring an external database connection.
+- 🕸️ **Network Topology Graph (React Flow)**: Interactive graph visualizing Department Groups, Manager hierarchies, and Employee-Asset relationships.
+- 🏷️ **Asset Inventory & QR Generator**: Barcode/QR code creation, life-cycle tracking, and risk-score assignment.
+- 🛡️ **Risk Management Matrix**: Interactive 5×5 Likelihood vs Impact Heatmap Matrix and Risk Register.
+- 📋 **Compliance Tracker**: Continuous framework control tracking across ISO 27001, SOC 2, NIST CSF, and CIS Controls.
+- 🔍 **Audit & Vendor Management**: Internal audit lifecycle, questionnaire tracking, vendor security certificates, and contract expiries.
+- 🤖 **AI Assistant**: Conversational GRC intelligence engine analyzing organizational risk postures.
+- ⚡ **Real-Time WebSockets**: Socket.IO event pipeline synchronizing employee profiles, assets, and audit logs across all open clients instantly.
 
 ---
 
 ## 🔒 Credential Security Guarantee
 
-This repository strictly protects sensitive credentials, environment variables, and private database instances:
-- `.gitignore` ignores all `.env`, `.env.local`, SQLite databases (`*.db`), `node_modules`, and build outputs.
+This repository enforces strict security guidelines to prevent secret leakage:
+- `.gitignore` ignores all `.env`, `.env.local`, SQLite databases (`dev.db`, `prisma/*.db*`), `node_modules`, and build artifacts.
 - Safe templates are provided: [server/.env.example](server/.env.example) & [client/.env.example](client/.env.example).
-- Secret keys and JWT passphrases must be supplied via Vercel / hosting provider environment variable management.
+- All secret keys and JWT passphrases must be supplied via Vercel or your hosting environment settings.
 
 ---
 
-## Technical Highlights
+## 🏗️ System Architecture
 
-- **Frontend**: React 19, TypeScript, Vite, Tailwind CSS, React Flow (Network Graph), Recharts, Zustand, Framer Motion, React Router, TanStack Query.
-- **Backend**: Node.js, Express.js, TypeScript, Clean Architecture, Socket.IO, Prisma ORM, JWT authentication, PDFKit, QRCode.
-- **Database**: PostgreSQL / SQLite initialized with Prisma schema & realistic seed generator (100 Employees, 500 Assets, 100 Risks, 50 Vendors, 50 Incidents, 30 Policies, 20 Audits).
-- **Real-Time Communication**: Socket.IO event-driven architecture synchronizing Employee profiles, Asset Inventory, Network Diagram, and Audit Logs across all open clients instantly.
-- **AI Assistant**: Natural language GRC analytics engine evaluating live database state with a pluggable LLM interface.
+```
+                               ┌─────────────────────────┐
+                               │   React 19 Client UI    │
+                               │  (Vite + Tailwind CSS)  │
+                               └────────────┬────────────┘
+                                            │
+                     ┌──────────────────────┴──────────────────────┐
+                     │                                             │
+             HTTP / REST API                                 WebSockets / Real-time
+        (Express Clean Architecture)                        (Socket.IO Event Hub)
+                     │                                             │
+                     └──────────────────────┬──────────────────────┘
+                                            │
+                               ┌────────────▼────────────┐
+                               │     Prisma ORM Layer    │
+                               └────────────┬────────────┘
+                                            │
+                               ┌────────────▼────────────┐
+                               │ SQLite / PostgreSQL DB  │
+                               └─────────────────────────┘
+```
 
 ---
 
 ## 💻 Quick Start (Local Execution)
+
+### Prerequisites
+- **Node.js**: v18+ installed
+- **npm**: v9+ installed
 
 ### 1. Build Shared Types
 ```bash
@@ -62,7 +99,17 @@ cd client
 npm install
 npm run dev
 ```
-Open `http://localhost:3000` in your browser.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+---
+
+## 🐳 Docker Deployment
+
+To launch the full-stack application using Docker Compose:
+
+```bash
+docker compose -f docker/docker-compose.yml up --build
+```
 
 ---
 
@@ -70,22 +117,10 @@ Open `http://localhost:3000` in your browser.
 
 1. Push your repository to GitHub (refer to [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)).
 2. Import your GitHub repository on [Vercel](https://vercel.com).
-3. Set root directory to `client`, framework preset to `Vite`, build command to `npm run build`, and click **Deploy**.
+3. Set root directory to `client`, build command to `npm run build`, output directory to `dist`, and click **Deploy**.
 
 ---
 
-## 🔑 Key Modules Included
+## 📄 License
 
-1. **Executive Dashboard**: Real-time KPIs, Compliance Trends (ISO 27001, SOC 2), Risk Breakdown, and Activity Feeds.
-2. **Employee Directory**: Complete workforce management, department filters, and asset assignments.
-3. **Asset Inventory**: Barcode & QR Code generation, risk scoring, life-cycle tracking.
-4. **Network Diagram (React Flow)**: Interactive graph visualization of Department Groups, Manager hierarchies, and Employee-Asset relationships.
-5. **Risk Management**: Risk Register and interactive 5×5 Heatmap Matrix (Likelihood × Impact).
-6. **Compliance Module**: ISO 27001, SOC 2, NIST CSF, and CIS Controls security control tracking.
-7. **Audit Module**: Audit planning, findings tracking, and corrective actions.
-8. **Vendor Management**: Third-party security questionnaires, certificates, and contract expiries.
-9. **Incident Management**: Incident response escalation, root cause analysis, and resolution timeline.
-10. **Policy Management**: Version control, review cycle countdowns, and employee acknowledgements.
-11. **AI Assistant**: Conversational GRC query engine.
-12. **Reports Generator**: Instant PDF & CSV exports.
-13. **System Audit Logs**: Immutable real-time trail of all user actions and IP addresses.
+This project is licensed under the MIT License - see the LICENSE file for details.
