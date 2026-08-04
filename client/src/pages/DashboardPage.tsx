@@ -7,14 +7,59 @@ import { useSocketListener } from '../shared/hooks/useSocket';
 
 const COLORS = ['#0284c7', '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
 
+const FALLBACK_KPIS: ExecutiveDashboardKPIs = {
+  totalEmployees: 100,
+  totalAssets: 500,
+  highRiskAssetsCount: 14,
+  compliancePercentage: 92,
+  openRisksCount: 8,
+  pendingAuditsCount: 3,
+  activeIncidentsCount: 2,
+  activeVendorsCount: 45,
+  complianceTrend: [
+    { month: 'Jan', percentage: 78 },
+    { month: 'Feb', percentage: 82 },
+    { month: 'Mar', percentage: 85 },
+    { month: 'Apr', percentage: 88 },
+    { month: 'May', percentage: 90 },
+    { month: 'Jun', percentage: 92 },
+  ],
+  assetCategoryDistribution: [
+    { category: 'Laptops & Workstations', count: 240 },
+    { category: 'Cloud Servers', count: 120 },
+    { category: 'Mobile Devices', count: 85 },
+    { category: 'Network Routers', count: 35 },
+    { category: 'Database Clusters', count: 20 },
+  ],
+  riskTrend: [
+    { date: 'W1', low: 18, medium: 9, high: 2 },
+    { date: 'W2', low: 22, medium: 11, high: 3 },
+    { date: 'W3', low: 25, medium: 10, high: 2 },
+    { date: 'W4', low: 28, medium: 8, high: 1 },
+  ],
+  recentActivities: [
+    { id: '1', timestamp: new Date().toISOString(), userId: 'u-1', userName: 'Sarah Jenkins', userRole: 'COMPLIANCE_OFFICER' as any, action: 'ISO 27001 Control A.12 Evaluated', module: 'compliance', ipAddress: '192.168.1.45' },
+    { id: '2', timestamp: new Date(Date.now() - 3600000).toISOString(), userId: 'u-2', userName: 'David Chen', userRole: 'ADMINISTRATOR' as any, action: 'New Cloud Server Asset Registered', module: 'assets', ipAddress: '192.168.1.12' },
+    { id: '3', timestamp: new Date(Date.now() - 7200000).toISOString(), userId: 'u-3', userName: 'Elena Rostova', userRole: 'AUDITOR' as any, action: 'Q3 SOC 2 Audit Initiated', module: 'audits', ipAddress: '192.168.1.88' },
+  ],
+};
+
 export const DashboardPage: React.FC = () => {
   const [data, setData] = useState<ExecutiveDashboardKPIs | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isDemoMode, setIsDemoMode] = useState(false);
 
   const fetchKPIs = useCallback(() => {
     apiFetch<ExecutiveDashboardKPIs>('/dashboard/kpis')
-      .then((res) => setData(res))
-      .catch((err) => console.error(err))
+      .then((res) => {
+        setData(res);
+        setIsDemoMode(false);
+      })
+      .catch((err) => {
+        console.warn('Backend API unreachable, using fallback GRC metrics:', err);
+        setData(FALLBACK_KPIS);
+        setIsDemoMode(true);
+      })
       .finally(() => setLoading(false));
   }, []);
 
@@ -55,9 +100,15 @@ export const DashboardPage: React.FC = () => {
         </div>
         <div className="flex items-center space-x-2 bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-xl text-xs font-mono text-cyan-400">
           <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
-          <span>Live WebSocket Feed</span>
+          <span>{isDemoMode ? 'Interactive Showcase Feed' : 'Live WebSocket Feed'}</span>
         </div>
       </div>
+
+      {isDemoMode && (
+        <div className="bg-cyan-500/10 border border-cyan-500/20 text-cyan-300 text-xs px-4 py-2 rounded-xl flex items-center justify-between">
+          <span>⚡ <strong>Interactive Showcase Mode:</strong> Displaying structured GRC metrics. Deploy backend server to stream live DB state.</span>
+        </div>
+      )}
 
       {/* KPI Cards Grid */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
