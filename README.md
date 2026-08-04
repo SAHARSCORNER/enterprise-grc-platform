@@ -3,7 +3,6 @@
 ![React 19](https://img.shields.io/badge/Frontend-React_19-blue?logo=react)
 ![TypeScript](https://img.shields.io/badge/Language-TypeScript-blue?logo=typescript)
 ![Vite](https://img.shields.io/badge/Build-Vite-646CFF?logo=vite)
-![Vercel](https://img.shields.io/badge/Hosted_on-Vercel-000000?logo=vercel)
 ![Node.js](https://img.shields.io/badge/Backend-Node.js-339933?logo=nodedotjs)
 ![Prisma](https://img.shields.io/badge/ORM-Prisma-2D3748?logo=prisma)
 ![Socket.IO](https://img.shields.io/badge/WebSockets-Socket.IO-010101?logo=socketdotio)
