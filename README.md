@@ -114,19 +114,9 @@ To launch the entire platform stack using Docker Compose:
 docker compose -f docker/docker-compose.yml up --build
 ```
 
----
-
-## 🌐 Vercel Deployment Settings
-
-When deploying the frontend to **Vercel**:
-- **GitHub Repository**: `SAHARSCORNER/enterprise-grc-platform`
-- **Root Directory**: `./` (or `client`)
-- **Framework Preset**: `Vite`
-- **Build Command**: `npm --prefix shared run build && npm --prefix client run build`
-- **Output Directory**: `client/dist`
 
 ---
 
-## 📄 License
+## 📄 Contributions
 
-This project is licensed under the MIT License.
+This project is developed by Sahar Sameer Budye - BE CSE(AIML).
